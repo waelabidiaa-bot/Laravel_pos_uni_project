@@ -11,6 +11,9 @@
     $sessionRevenue = $paidSales->sum('total');
     $totalTransactions = $paidSales->count();
     $pendingCount = $pendingSales->count();
+    
+    $currency = \App\Models\Parametre::first()?->currency ?? 'TND';
+
 @endphp
 
 <div class="space-y-8">
@@ -91,7 +94,7 @@
 
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-sm font-medium text-slate-400">
-                                TND
+                                {{ $currency }}
                             </span>
 
                             <input
@@ -201,7 +204,7 @@
 
                 <p class="mt-4 text-2xl font-bold tracking-tight text-slate-900">
                     {{ number_format($session->opening_amount, 3) }}
-                    <span class="text-sm font-medium text-slate-500">TND</span>
+                    <span class="text-sm font-medium text-slate-500">{{ $currency }}</span>
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
@@ -222,7 +225,7 @@
 
                 <p class="mt-4 text-2xl font-bold tracking-tight text-slate-900">
                     {{ number_format($sessionRevenue, 3) }}
-                    <span class="text-sm font-medium text-slate-500">TND</span>
+                    <span class="text-sm font-medium text-slate-500">{{ $currency }}</span>
                 </p>
 
                 <p class="mt-1 text-xs text-slate-400">
@@ -322,7 +325,7 @@
 
                                 <td class="whitespace-nowrap px-5 py-4 text-right font-semibold text-slate-900">
                                     {{ number_format($sale->total, 3) }}
-                                    <span class="text-xs font-normal text-slate-500">TND</span>
+                                    <span class="text-xs font-normal text-slate-500">{{ $currency }}</span>
                                 </td>
 
                                 <td class="whitespace-nowrap px-5 py-4">
@@ -413,7 +416,7 @@
 
                     <div class="w-full sm:max-w-sm">
                         <label for="closing_amount" class="mb-2 block text-sm font-semibold text-slate-700">
-                            Counted cash in drawer (TND)
+                            Counted cash in drawer ({{ $currency }})
                         </label>
 
                         <input

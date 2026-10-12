@@ -1,5 +1,7 @@
 {{-- Expects: $action, $method, $categories, optional $product --}}
-
+@php
+    $currency = \App\Models\Parametre::first()?->currency ?? 'TND';
+@endphp
 
 <form
     method="POST"
@@ -87,7 +89,7 @@
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
             <label for="purchase_price" class="mb-1 block text-sm font-semibold text-slate-700">
-                Purchase price (TND)
+                Purchase price ({{ $currency }})
             </label>
 
             <input
@@ -108,7 +110,7 @@
 
         <div>
             <label for="price" class="mb-1 block text-sm font-semibold text-slate-700">
-                Selling price (TND) *
+                Selling price ({{ $currency }}) *
             </label>
 
             <input
@@ -279,10 +281,10 @@
             const margin = selling > 0 ? (profit / selling) * 100 : null;
 
             profitPreview.textContent =
-                profit.toFixed(3) + ' TND';
+                profit.toFixed(3) + ' {{ $currency }}';
 
             marginPreview.textContent =
-                margin === null ? '—' : margin.toFixed(2) + '%';
+                margin === null ? '—' : margin.toFixed(2) + '% {{ $currency }}';
 
             profitPreview.className =
                 'mt-1 text-xl font-bold ' +

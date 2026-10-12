@@ -3,6 +3,9 @@
 @section('title', 'Products')
 
 @section('content')
+@php
+    $currency = \App\Models\Parametre::first()?->currency ?? 'TND';
+@endphp
 <div class="space-y-6">
 
     {{-- Page header --}}
@@ -296,7 +299,7 @@
                                     <span class="font-medium text-slate-700">
                                         {{ number_format($purchasePrice, 3) }}
                                     </span>
-                                    <span class="text-xs text-slate-500">TND</span>
+                                    <span class="text-xs text-slate-500">{{ $currency }}</span>
                                 @else
                                     <span class="text-xs text-slate-400">Not set</span>
                                 @endif
@@ -307,7 +310,7 @@
                                 <span class="font-semibold text-slate-900">
                                     {{ number_format($sellingPrice, 3) }}
                                 </span>
-                                <span class="text-xs text-slate-500">TND</span>
+                                <span class="text-xs text-slate-500">{{ $currency }}</span>
                             </td>
 
                             {{-- Profit per unit --}}
@@ -316,7 +319,7 @@
                                     <span class="font-semibold {{ $profit < 0 ? 'text-red-600' : 'text-emerald-600' }}">
                                         {{ number_format($profit, 3) }}
                                     </span>
-                                    <span class="text-xs text-slate-500">TND</span>
+                                    <span class="text-xs text-slate-500">{{ $currency }}</span>
                                 @else
                                     <span class="text-xs text-slate-400">Unknown</span>
                                 @endif
@@ -339,7 +342,7 @@
                                     {{ $quantity }}
                                 </span>
                                 <p class="mt-1 text-xs text-slate-400">
-                                    Minimum: {{ $threshold }}
+                                    Minimum: {{ $threshold }} {{ $currency }}
                                 </p>
                             </td>
 

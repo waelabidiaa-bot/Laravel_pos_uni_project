@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\{
     CategoryController,
     StockController,
     SaleReportController,
-    StatisticsController
+    StatisticsController,
+    AIInsightsController
 };
 use App\Http\Controllers\Cashier\{
     DashboardController as CashierDashboardController,
@@ -65,6 +66,11 @@ Route::middleware('auth')->group(function () {
         Route::get('sales', [SaleReportController::class, 'index'])->name('sales.index');
         Route::get('sales/{sale}', [SaleReportController::class, 'show'])->name('sales.show');
         Route::get('statistics', [StatisticsController::class, 'index'])->name('statistics.index'); 
+        Route::get('ai-insights', [AIInsightsController::class, 'index'])
+        ->name('ai-insights.index');
+
+        Route::post('ai-insights/ask', [AIInsightsController::class, 'ask'])
+    ->name('ai-insights.ask');
     });
 
     /* ----- Cashier ----- */

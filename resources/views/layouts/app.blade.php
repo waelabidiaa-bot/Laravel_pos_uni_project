@@ -97,6 +97,13 @@
                             <i class="fa-solid fa-warehouse w-5 text-center"></i>
                             <span>Inventory</span>
                         </a>
+                        
+                        <a href="{{ route('admin.ai-insights.index') }}"
+                        class="sidebar-link {{ request()->routeIs('admin.ai-insights.*') ? 'side-link-active' : '' }}">
+                            <i class="fa-solid fa-robot"></i>
+                            <span>AI Insights</span>
+                        </a>
+
 
                         <a href="{{ route('admin.cashiers.index') }}"
                            class="sidebar-link {{ request()->routeIs('admin.cashiers.*') ? 'sidebar-link-active' : '' }}">
@@ -115,6 +122,7 @@
                             <i class="fa-solid fa-chart-line w-5 text-center"></i>
                             <span>Statistics</span>
                         </a>
+                        
 
                     @else
 

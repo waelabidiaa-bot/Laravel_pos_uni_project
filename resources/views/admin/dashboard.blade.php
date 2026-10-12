@@ -5,6 +5,9 @@
 @section('breadcrumb', 'Overview')
 
 @section('content')
+@php
+    $currency = \App\Models\Parametre::first()?->currency ?? 'TND';
+@endphp
 
 <div class="space-y-8">
 
@@ -72,7 +75,7 @@
                     </h2>
 
                     <p class="mt-1 text-xs font-medium text-slate-500">
-                        Tunisian Dinar (TND)
+                        Tunisian Dinar ({{ $currency }})
                     </p>
                 </div>
 
@@ -163,7 +166,7 @@
                 <span class="h-2 w-2 rounded-full bg-blue-600"></span>
 
                 <span class="text-xs font-semibold text-blue-700">
-                    Revenue (TND)
+                    Revenue ({{ $currency }})
                 </span>
             </div>
         </div>
@@ -256,7 +259,7 @@
 
                             <td class="whitespace-nowrap px-6 py-4 text-right font-semibold text-slate-900">
                                 {{ number_format($sale->total, 3) }}
-                                <span class="text-xs font-normal text-slate-500">TND</span>
+                                <span class="text-xs font-normal text-slate-500">{{ $currency }}</span>
                             </td>
 
                             <td class="px-6 py-4">
@@ -479,6 +482,7 @@
                     <i class="fa-solid fa-arrow-up-right-from-square ml-auto text-xs text-slate-400"></i>
                 </a>
             @endif
+            
 
         </div>
     </div>
@@ -507,7 +511,7 @@
                 labels: labels,
 
                 datasets: [{
-                    label: 'Revenue (TND)',
+                    label: "Revenue ({{ $currency }})",
                     data: revenue,
 
                     borderColor: '#2563eb',
@@ -552,7 +556,7 @@
                                             minimumFractionDigits: 3,
                                             maximumFractionDigits: 3
                                         }
-                                    ) + ' TND';
+                                    ) + ' {{ $currency }}';
                             }
                         }
                     }
@@ -589,7 +593,7 @@
                             color: '#64748b',
 
                             callback: function (value) {
-                                return Number(value).toLocaleString() + ' TND';
+                                return Number(value).toLocaleString() + ' {{ $currency }}';
                             }
                         }
                     }

@@ -8,20 +8,35 @@ use Illuminate\Http\Request;
 
 class ParametreController extends Controller
 {
+    /**
+     * Display the store settings.
+     */
     public function index()
     {
-        $parametre = Parametre::first();
+        $parametre = Parametre::firstOrCreate(
+            [],
+            [
+                'store_name' => 'My Store',
+                'address' => '',
+                'phone' => '',
+                'email' => '',
+                'currency' => 'TND',
+            ]
+        );
 
         return view('parametre.index', compact('parametre'));
     }
 
+    /**
+     * Update the store settings.
+     */
     public function update(Request $request)
     {
-        if (auth()->user()->role !== 'ADMIN') {
+        if (!auth()->check() || auth()->user()->role !== 'ADMIN') {
             abort(403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'store_name' => 'required|string|max:255',
             'address' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:50',
@@ -29,34 +44,44 @@ class ParametreController extends Controller
             'currency' => 'required|string|max:10',
         ]);
 
-        $parametre = Parametre::first();
+        $parametre = Parametre::firstOrCreate(
+            [],
+            [
+                'store_name' => 'My Store',
+                'address' => '',
+                'phone' => '',
+                'email' => '',
+                'currency' => 'TND',
+            ]
+        );
 
-        $parametre->update([
-            'store_name' => $request->store_name,
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'currency' => $request->currency,
-        ]);
+        $parametre->update($validated);
 
         return redirect()
             ->route('parametre.index')
-            ->with('success', 'Paramètres mis à jour avec succès.');
+            ->with('success', 'Settings updated successfully.');
     }
-    
+
+    /**
+     * Update the current user's theme.
+     */
     public function updateTheme(Request $request)
-{
-    $request->validate([
-        'theme' => 'required|in:light,dark',
-    ]);
+    {
+        if (!auth()->check()) {
+            abort(403);
+        }
 
-    auth()->user()->update([
-        'theme' => $request->theme,
-    ]);
+        $validated = $request->validate([
+            'theme' => 'required|in:light,dark',
+        ]);
 
-    return response()->json([
-        'success' => true,
-        'theme' => $request->theme,
-    ]);
-}
+        auth()->user()->update([
+            'theme' => $validated['theme'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'theme' => $validated['theme'],
+        ]);
+    }
 }

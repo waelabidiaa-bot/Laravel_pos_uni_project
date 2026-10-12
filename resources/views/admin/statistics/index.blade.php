@@ -3,6 +3,10 @@
 @section('title', 'Statistics')
 
 @section('content')
+
+@php
+    $currency = \App\Models\Parametre::first()?->currency ?? 'TND';
+@endphp
 <div class="space-y-8">
 
     {{-- Page header --}}
@@ -92,7 +96,7 @@
                     <p class="text-sm font-medium text-slate-500">Total Revenue</p>
                     <p class="mt-3 text-2xl font-bold text-slate-900">
                         {{ number_format($totalRevenue, 3) }}
-                        <span class="text-sm font-medium text-slate-400">TND</span>
+                        <span class="text-sm font-medium text-slate-400">{{ $currency }}</span>
                     </p>
                 </div>
                 <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-sky-50">
@@ -109,7 +113,7 @@
                     <p class="text-sm font-medium text-slate-500">Product Costs</p>
                     <p class="mt-3 text-2xl font-bold text-slate-900">
                         {{ number_format($totalCost, 3) }}
-                        <span class="text-sm font-medium text-slate-400">TND</span>
+                        <span class="text-sm font-medium text-slate-400">{{ $currency }}</span>
                     </p>
                 </div>
                 <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-amber-50">
@@ -126,7 +130,7 @@
                     <p class="text-sm font-medium text-slate-500">Gross Profit</p>
                     <p class="mt-3 text-2xl font-bold {{ $grossProfit >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
                         {{ number_format($grossProfit, 3) }}
-                        <span class="text-sm font-medium text-slate-400">TND</span>
+                        <span class="text-sm font-medium text-slate-400">{{ $currency }}</span>
                     </p>
                 </div>
                 <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-50">
@@ -176,7 +180,7 @@
             <p class="text-sm font-medium text-slate-500">Average Sale</p>
             <p class="mt-2 text-2xl font-bold text-slate-900">
                 {{ number_format($averageSale, 3) }}
-                <span class="text-sm font-medium text-slate-400">TND</span>
+                <span class="text-sm font-medium text-slate-400">{{ $currency }}</span>
             </p>
             <p class="mt-2 text-xs text-slate-500">Revenue per paid transaction</p>
         </div>
@@ -258,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
         callbacks: {
             label: function (context) {
                 return context.dataset.label + ': ' +
-                    Number(context.raw).toFixed(3) + ' TND';
+                    Number(context.raw).toFixed(3) + ' {{ $currency }}';
             }
         }
     };
@@ -296,7 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value + ' TND'
+                        callback: value => value + ' {{ $currency }}'
                     }
                 }
             }
@@ -336,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value + ' TND'
+                        callback: value => value + ' {{ $currency }}'
                     }
                 }
             }
@@ -455,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </td>
 
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-slate-700">
-                                    {{ number_format($product->revenue, 3) }} TND
+                                    {{ number_format($product->revenue, 3) }} {{ $currency }}
                                 </td>
                             </tr>
                         @endforeach
