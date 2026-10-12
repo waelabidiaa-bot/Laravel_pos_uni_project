@@ -16,11 +16,14 @@ return new class extends Migration
             $table->foreignId('category_id')
                 ->constrained('categories')
                 ->cascadeOnDelete();
+            $table->string('image')->nullable();
+            $table->decimal('purchase_price', 10, 2)->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('products');
+        
     }
 };

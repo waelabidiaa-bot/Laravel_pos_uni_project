@@ -40,13 +40,14 @@ class SaleItemController extends Controller
 
         if ($existing) {
             $sale->items()->where('product_id', $product->id)->update(['quantity' => $newQty]);
-        } else {
-            $sale->items()->create([
-                'product_id' => $product->id,
-                'quantity'   => $data['quantity'],
-                'unit_price' => $product->price, // freeze the price at sale time
-            ]);
-        }
+        }  else {
+        $sale->items()->create([
+            'product_id' => $product->id,
+            'quantity' => $data['quantity'],
+            'unit_price' => $product->price,
+            'purchase_price_at_sale' => $product->purchase_price,
+        ]);
+}
 
         $sale->recalculateTotal();
 

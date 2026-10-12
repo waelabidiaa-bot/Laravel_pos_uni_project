@@ -2,17 +2,26 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Category::factory()->count(4)->create();
+        $categories = [
+            'Drinks',
+            'Snacks',
+            'Dairy',
+            'Household',
+        ];
+
+        foreach ($categories as $name) {
+            Category::firstOrCreate([
+                'name' => $name,
+            ]);
+        }
+
+        $this->command->info('Test categories created successfully.');
     }
 }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -6,285 +5,332 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-   <title>@yield('title', 'POS')</title>
+    <title>@yield('title', 'Dashboard') | {{ \App\Models\Parametre::first()?->store_name ?? 'POS' }}</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Vite + Tailwind CSS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- Icons --}}
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    @livewireStyles
 </head>
 
-<body class="bg-slate-100 text-slate-800 min-h-screen">
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
 
 @auth
 
-<!-- NAVBAR -->
-<nav class="bg-slate-900 text-white shadow-lg">
+<div class="min-h-screen">
 
-    <div class="max-w-7xl mx-auto px-6">
+    {{-- MOBILE OVERLAY --}}
+    <div id="sidebar-overlay"
+         class="fixed inset-0 z-40 hidden bg-slate-950/50 lg:hidden"
+         onclick="toggleSidebar()">
+    </div>
 
-        <div class="h-16 flex items-center justify-between">
+    {{-- SIDEBAR --}}
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col
+                  border-r border-slate-800 bg-slate-950 text-slate-300
+                  transition-transform duration-300 lg:translate-x-0">
 
-            <!-- LEFT -->
-            <div class="flex items-center gap-8">
+        {{-- BRAND --}}
+        <div class="flex h-20 items-center gap-3 border-b border-white/10 px-6">
 
-                <!-- LOGO -->
-                <a href="{{ route('home') }}"
-                   class="flex items-center gap-3 text-xl font-bold tracking-wide">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl
+                        bg-blue-600 text-lg text-white shadow-lg shadow-blue-600/20">
+                <i class="fa-solid fa-store"></i>
+            </div>
 
-                    <div class="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
+            <div class="min-w-0">
+                <p class="truncate text-base font-bold tracking-wide text-white">
+                    {{ \App\Models\Parametre::first()?->store_name ?? 'POS System' }}
+                </p>
 
-                    <span>
-                        {{ \App\Models\Parametre::first()?->store_name ?? 'POS' }}
-                    </span>
+                <p class="mt-0.5 text-xs text-slate-500">
+                    Management platform
+                </p>
+            </div>
 
-                </a>
+            <button type="button"
+                    onclick="toggleSidebar()"
+                    class="ml-auto text-slate-400 hover:text-white lg:hidden"
+                    aria-label="Close navigation">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
 
+        </div>
 
-                <!-- NAVIGATION -->
-                <div class="hidden md:flex items-center gap-1">
+        {{-- NAVIGATION --}}
+        <nav class="flex-1 space-y-7 overflow-y-auto px-4 py-6">
+
+            <div>
+                <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                    Workspace
+                </p>
+
+                <div class="space-y-1">
 
                     @if (auth()->user()->role === 'ADMIN')
 
                         <a href="{{ route('admin.dashboard') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-chart-line"></i>
-                            Dashboard
+                           class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                            <span>Dashboard</span>
                         </a>
 
                         <a href="{{ route('admin.products.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-box"></i>
-                            Products
+                           class="sidebar-link {{ request()->routeIs('admin.products.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-box w-5 text-center"></i>
+                            <span>Products</span>
                         </a>
 
                         <a href="{{ route('admin.categories.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-layer-group"></i>
-                            Categories
+                           class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-layer-group w-5 text-center"></i>
+                            <span>Categories</span>
                         </a>
 
                         <a href="{{ route('admin.stock.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-warehouse"></i>
-                            Stock
+                           class="sidebar-link {{ request()->routeIs('admin.stock.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-warehouse w-5 text-center"></i>
+                            <span>Inventory</span>
                         </a>
 
                         <a href="{{ route('admin.cashiers.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-users"></i>
-                            Cashiers
+                           class="sidebar-link {{ request()->routeIs('admin.cashiers.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-users w-5 text-center"></i>
+                            <span>Cashiers</span>
                         </a>
 
                         <a href="{{ route('admin.sales.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-receipt"></i>
-                            Sales
+                           class="sidebar-link {{ request()->routeIs('admin.sales.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-receipt w-5 text-center"></i>
+                            <span>Sales</span>
                         </a>
 
                         <a href="{{ route('admin.statistics.index') }}"
-                           class="nav-link">
-                            <i class="fa-solid fa-chart-pie"></i>
-                            Statistics
+                           class="sidebar-link {{ request()->routeIs('admin.statistics.*') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-chart-line w-5 text-center"></i>
+                            <span>Statistics</span>
                         </a>
 
                     @else
 
                         <a href="{{ route('cashier.dashboard') }}"
-                           class="nav-link">
-
-                            <i class="fa-solid fa-cash-register"></i>
-                            My Session
-
+                           class="sidebar-link {{ request()->routeIs('cashier.dashboard') ? 'sidebar-link-active' : '' }}">
+                            <i class="fa-solid fa-cash-register w-5 text-center"></i>
+                            <span>My Session</span>
                         </a>
 
                     @endif
 
                 </div>
-
             </div>
 
+            {{-- GENERAL --}}
+            <div>
+                <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                    General
+                </p>
 
-            <!-- RIGHT -->
-            <div class="flex items-center gap-4">
+                <div class="space-y-1">
 
-                <!-- SETTINGS -->
-                <a href="{{ route('parametre.index') }}"
-                   title="Settings"
-                   class="w-9 h-9 flex items-center justify-center rounded-lg
-                          text-slate-300 hover:text-white
-                          hover:bg-slate-800 transition">
-
-                    <i class="fa-solid fa-gear"></i>
-
-                </a>
-
-
-                <!-- USER -->
-                <div class="hidden sm:flex items-center gap-3">
-
-                    <div class="w-9 h-9 rounded-full bg-sky-500
-                                flex items-center justify-center
-                                font-semibold">
-
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-
-                    </div>
-
-                    <div class="leading-tight">
-
-                        <p class="text-sm font-medium">
-                            {{ auth()->user()->name }}
-                        </p>
-
-                        <p class="text-xs text-slate-400">
-                            {{ strtolower(auth()->user()->role) }}
-                        </p>
-
-                    </div>
+                    <a href="{{ route('parametre.index') }}"
+                       class="sidebar-link {{ request()->routeIs('parametre.*') ? 'sidebar-link-active' : '' }}">
+                        <i class="fa-solid fa-gear w-5 text-center"></i>
+                        <span>Settings</span>
+                    </a>
 
                 </div>
+            </div>
 
+        </nav>
 
-                <!-- LOGOUT -->
+        {{-- SIDEBAR FOOTER --}}
+        <div class="border-t border-white/10 p-4">
+
+            <div class="flex items-center gap-3 rounded-xl bg-white/5 p-3">
+
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center
+                            rounded-xl bg-blue-500/15 font-semibold text-blue-400">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+
+                <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-semibold text-white">
+                        {{ auth()->user()->name }}
+                    </p>
+
+                    <p class="mt-0.5 text-xs capitalize text-slate-500">
+                        {{ strtolower(auth()->user()->role) }}
+                    </p>
+                </div>
+
                 <form method="POST" action="{{ route('logout') }}">
-
                     @csrf
 
-                    <button
-                        class="w-9 h-9 flex items-center justify-center
-                               rounded-lg text-slate-300
-                               hover:text-white hover:bg-red-500/20
-                               transition"
-                        title="Logout">
-
+                    <button type="submit"
+                            title="Logout"
+                            aria-label="Logout"
+                            class="flex h-9 w-9 items-center justify-center rounded-lg
+                                   text-slate-400 transition hover:bg-red-500/10
+                                   hover:text-red-400">
                         <i class="fa-solid fa-right-from-bracket"></i>
-
                     </button>
-
                 </form>
 
             </div>
 
         </div>
 
-    </div>
-
-</nav>
+    </aside>
 
 
-<!-- MAIN CONTENT -->
+    {{-- MAIN AREA --}}
+    <div class="min-h-screen lg:pl-64">
 
-<main class="max-w-7xl mx-auto px-6 py-8">
+        {{-- TOP BAR --}}
+        <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
 
-    <!-- SUCCESS -->
-    @if (session('success'))
+            <div class="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
 
-        <div class="mb-6 flex items-center gap-3
-                    rounded-xl border border-green-200
-                    bg-green-50 px-5 py-4
-                    text-green-800 shadow-sm">
+                <div class="flex min-w-0 items-center gap-4">
 
-            <i class="fa-solid fa-circle-check text-green-500"></i>
+                    <button type="button"
+                            onclick="toggleSidebar()"
+                            class="flex h-10 w-10 shrink-0 items-center justify-center
+                                   rounded-xl border border-slate-200 text-slate-600
+                                   transition hover:bg-slate-100 lg:hidden"
+                            aria-label="Open navigation">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
 
-            <span>
-                {{ session('success') }}
-            </span>
+                    <div class="min-w-0">
+                        <h1 class="truncate text-lg font-bold tracking-tight text-slate-900 sm:text-xl">
+                            @yield('page-title', 'Dashboard')
+                        </h1>
 
-        </div>
+                        <p class="mt-1 hidden text-xs text-slate-500 sm:block">
+                            Welcome back, {{ auth()->user()->name }}
+                        </p>
+                    </div>
 
-    @endif
+                </div>
 
+                <div class="flex shrink-0 items-center gap-3">
 
-    <!-- ERROR -->
-    @if (session('error'))
+                    {{-- CURRENT DATE --}}
+                    <div class="hidden items-center gap-2 rounded-xl border border-slate-200
+                                bg-slate-50 px-3 py-2 text-sm text-slate-600 md:flex">
+                        <i class="fa-regular fa-calendar text-slate-400"></i>
+                        <span>{{ now()->format('d M Y') }}</span>
+                    </div>
 
-        <div class="mb-6 flex items-center gap-3
-                    rounded-xl border border-red-200
-                    bg-red-50 px-5 py-4
-                    text-red-800 shadow-sm">
+                    {{-- USER AVATAR --}}
+                    <div class="flex h-10 w-10 items-center justify-center rounded-xl
+                                bg-blue-50 font-bold text-blue-700 ring-1 ring-blue-100">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </div>
 
-            <i class="fa-solid fa-circle-exclamation text-red-500"></i>
-
-            <span>
-                {{ session('error') }}
-            </span>
-
-        </div>
-
-    @endif
-
-
-    <!-- VALIDATION ERRORS -->
-    @if ($errors->any())
-
-        <div class="mb-6 rounded-xl border border-red-200
-                    bg-red-50 px-5 py-4
-                    text-red-800 shadow-sm">
-
-            <div class="flex items-center gap-3 mb-2">
-
-                <i class="fa-solid fa-triangle-exclamation"></i>
-
-                <span class="font-semibold">
-                    Please fix the following errors:
-                </span>
+                </div>
 
             </div>
 
-            <ul class="list-disc list-inside text-sm">
-
-                @foreach ($errors->all() as $error)
-
-                    <li>{{ $error }}</li>
-
-                @endforeach
-
-            </ul>
-
-        </div>
-
-    @endif
+        </header>
 
 
-    <!-- PAGE CONTENT -->
+        {{-- PAGE CONTENT --}}
+        <main class="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
 
-    @yield('content')
+            {{-- BREADCRUMB --}}
+            <div class="mb-6 flex items-center gap-2 text-xs text-slate-400">
+                <i class="fa-solid fa-house"></i>
+                <span>/</span>
+                <span class="font-medium text-slate-600">
+                    @yield('breadcrumb', 'Workspace')
+                </span>
+            </div>
 
-</main>
+            {{-- SUCCESS MESSAGE --}}
+            @if (session('success'))
+                <div class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200
+                            bg-emerald-50 px-4 py-4 text-sm text-emerald-800">
+
+                    <i class="fa-solid fa-circle-check mt-0.5 text-emerald-600"></i>
+
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+            {{-- ERROR MESSAGE --}}
+            @if (session('error'))
+                <div class="mb-6 flex items-start gap-3 rounded-xl border border-red-200
+                            bg-red-50 px-4 py-4 text-sm text-red-800">
+
+                    <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-600"></i>
+
+                    <p>{{ session('error') }}</p>
+                </div>
+            @endif
+
+            {{-- VALIDATION ERRORS --}}
+            @if ($errors->any())
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+
+                    <div class="mb-2 flex items-center gap-2 font-semibold">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        Please fix the following errors:
+                    </div>
+
+                    <ul class="list-inside list-disc space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+
+                </div>
+            @endif
+
+            {{-- EXISTING PAGE CONTENT --}}
+            @yield('content')
+
+        </main>
+
+        {{-- FOOTER --}}
+        <footer class="border-t border-slate-200 bg-white px-6 py-4 lg:px-8">
+            <div class="mx-auto flex max-w-[1600px] flex-col justify-between gap-2
+                        text-xs text-slate-400 sm:flex-row">
+                <p>
+                    &copy; {{ date('Y') }}
+                    {{ \App\Models\Parametre::first()?->store_name ?? 'POS System' }}.
+                    All rights reserved.
+                </p>
+
+                <p>Point of Sale Management System</p>
+            </div>
+        </footer>
+
+    </div>
+
+</div>
 
 @endauth
 
-
-<style>
-
-    .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        color: rgb(203 213 225);
-        transition: all 0.2s;
-    }
-
-    .nav-link:hover {
-        background-color: rgb(30 41 59);
-        color: white;
-    }
-
-</style>
 <script>
-    tailwind.config = {
-        darkMode: 'class'
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        if (!sidebar || !overlay) return;
+
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
     }
 </script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+@livewireScripts
 
 </body>
 </html>
-```

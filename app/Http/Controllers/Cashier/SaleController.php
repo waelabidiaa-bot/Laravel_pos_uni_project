@@ -53,13 +53,15 @@ class SaleController extends Controller
         return redirect()->route('cashier.dashboard')->with('success', "Sale #{$sale->id} cancelled.");
     }
 
-     public function receipt($id)
+     public function receipt(Request $request, Sale $sale)
 {
-    $sale = Sale::with([
+    abort_unless($sale->isOwnedBy($request->user()), 403);
+
+    $sale->load([
         'items.product',
         'payments',
-        'cashSession.cashier'
-    ])->findOrFail($id);
+        'cashSession.cashier',
+    ]);
 
     $parametre = Parametre::first();
 

@@ -12,7 +12,13 @@ class SaleItem extends Model
     public $incrementing = false;
     public $timestamps = false;
 
-    protected $fillable = ['sale_id', 'product_id', 'quantity', 'unit_price'];
+    protected $fillable = [
+        'sale_id',
+        'product_id',
+        'quantity',
+        'unit_price',
+        'purchase_price_at_sale',
+    ];
 
     public function sale(): BelongsTo
     {

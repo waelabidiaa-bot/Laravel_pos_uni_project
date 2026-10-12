@@ -15,7 +15,7 @@ class Product extends Model
     use HasFactory;
     public $timestamps = false;
 
-    protected $fillable = ['name', 'barcode', 'price', 'category_id'];
+    protected $fillable = ['name', 'barcode', 'price', 'category_id','image','purchase_price'];
 
     public function category(): BelongsTo
     {
