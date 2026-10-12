@@ -6,6 +6,33 @@ The project provides separate experiences for **Administrators** and **Cashiers*
 
 ---
 
+## 📸 Screenshots
+
+
+### Admin Dashboard
+![Admin Dashboard](screenshots/admin/dashboard.png)
+
+### Product Management
+![Product Management](screenshots/admin/products.png)
+
+### Category Management
+![Category Management](screenshots/admin/categories.png)
+
+### Statistics & Financial Analysis
+![Statistics](screenshots/admin/statistics.png)
+
+### Application Settings
+![Settings](screenshots/admin/settings.png)
+
+
+
+### Cashier POS Interface
+![Cashier POS](screenshots/cashier/pos.png)
+
+### Cashier POS sale-detailes
+![Cashier POS](screenshots/cashier/sales-details.png)
+
+
 ## ✨ Features
 
 ### 🔐 Authentication & Roles
@@ -288,3 +315,5 @@ The application uses Laravel's built-in security features, including:
 
 * Authentication
 * CSRF
+
+
