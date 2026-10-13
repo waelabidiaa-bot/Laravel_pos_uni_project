@@ -34,4 +34,8 @@ class User extends Authenticatable
     {
         return $this->cashSessions()->where('status', 'OPEN')->latest('opened_at')->first();
     }
+    public function conversations(): HasMany
+    {
+        return $this->hasMany(AiConversation::class);
+    }
 }

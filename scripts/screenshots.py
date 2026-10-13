@@ -51,8 +51,9 @@ ADMIN_PAGES = {
     "products": "/admin/products",
     "categories": "/admin/categories",
     "statistics": "/admin/statistics",
+
     "settings": "/parametre",
-    "ai-insights": "/admin/ai-insights",
+    "ai-insights": "/admin/ai-insights?conversation=3",
     "cashiers": "/admin/cashiers",
     "products-details": "/admin/products",  # Example product ID for testing
 

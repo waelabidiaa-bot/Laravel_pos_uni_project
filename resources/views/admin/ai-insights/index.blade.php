@@ -289,26 +289,199 @@
             @endif
         </div>
 
-        {{-- Ask the AI --}}
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <h2 class="text-lg font-semibold text-slate-900">
-                Ask your POS assistant
+        {{-- AI Chat Interface --}}
+<div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+    {{-- Chat header --}}
+    <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-lg font-bold text-slate-900">
+                POS AI Assistant
             </h2>
 
             <p class="mt-1 text-sm text-slate-500">
-                Ask a question about sales, profitability, best sellers, or stock.
+                Your personal business analyst, with conversation memory.
             </p>
+        </div>
 
-            <form method="POST"
-                  action="{{ route('admin.ai-insights.ask') }}"
-                  class="mt-5 space-y-4">
+        <span class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            Ollama · Local AI
+        </span>
+    </div>
 
-                @csrf
+    <div class="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)]">
 
-                <div>
+        {{-- Sidebar --}}
+        <aside class="border-b border-slate-200 bg-slate-50 p-4 md:border-b-0 md:border-r">
+            <a href="{{ route('admin.ai-insights.index', array_filter([
+                    'from' => $from,
+                    'to' => $to,
+                ])) }}"
+               class="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">
+
+                <span class="text-lg leading-none">+</span>
+                New chat
+            </a>
+
+            <h3 class="mb-3 mt-6 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                Recent conversations
+            </h3>
+
+            <div class="max-h-[420px] space-y-2 overflow-y-auto">
+
+                @forelse ($conversations as $conversation)
+                    <a href="{{ route('admin.ai-insights.index', array_filter([
+                            'conversation' => $conversation->id,
+                            'from' => $from,
+                            'to' => $to,
+                        ])) }}"
+                       class="block rounded-xl border p-3 transition
+                       {{ $activeConversation?->id === $conversation->id
+                            ? 'border-slate-400 bg-white shadow-sm'
+                            : 'border-transparent hover:border-slate-200 hover:bg-white' }}">
+
+                        <p class="truncate text-sm font-medium text-slate-800">
+                            {{ $conversation->title }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            {{ $conversation->messages_count }}
+                            {{ $conversation->messages_count === 1 ? 'message' : 'messages' }}
+                        </p>
+
+                        <p class="mt-1 text-xs text-slate-400">
+                            {{ $conversation->updated_at->diffForHumans() }}
+                        </p>
+                    </a>
+                @empty
+                    <p class="rounded-xl border border-dashed border-slate-300 bg-white p-4 text-sm leading-6 text-slate-500">
+                        No conversations yet. Ask your first question to start one.
+                    </p>
+                @endforelse
+
+            </div>
+        </aside>
+
+        {{-- Main chat --}}
+        <section class="min-w-0">
+
+            {{-- Conversation title --}}
+            <div class="border-b border-slate-200 px-5 py-4">
+                <h3 class="font-semibold text-slate-900">
+                    {{ $activeConversation?->title ?? 'New conversation' }}
+                </h3>
+
+                <p class="mt-1 text-xs text-slate-500">
+                    Answers use current POS figures and recent conversation history.
+                </p>
+            </div>
+
+            {{-- Messages --}}
+            <div id="ai-chat-messages"
+                 class="max-h-[600px] min-h-[300px] space-y-5 overflow-y-auto bg-slate-50/70 p-5">
+
+                @if ($activeConversation && $activeConversation->messages->isNotEmpty())
+
+                    @foreach ($activeConversation->messages as $message)
+
+                        @if ($message->role === 'user')
+                            <div class="flex justify-end">
+                                <div class="max-w-[90%] rounded-2xl rounded-br-md bg-slate-900 px-4 py-3 text-sm leading-6 text-white shadow-sm">
+                                    <p class="mb-1 text-xs font-semibold text-slate-300">
+                                        You
+                                    </p>
+
+                                    <div class="whitespace-pre-wrap break-words">{{ $message->content }}</div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="flex justify-start">
+                                <div class="max-w-[95%] rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-4 shadow-sm">
+                                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                                        POS AI Assistant
+                                    </p>
+
+                                    <div class="whitespace-pre-wrap break-words text-sm leading-7 text-slate-700">{{ $message->content }}</div>
+                                </div>
+                            </div>
+                        @endif
+
+                    @endforeach
+
+                @else
+
+                    <div class="flex min-h-[260px] flex-col items-center justify-center px-4 text-center">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
+                            💬
+                        </div>
+
+                        <h4 class="mt-4 font-semibold text-slate-800">
+                            What would you like to know?
+                        </h4>
+
+                        <p class="mt-2 max-w-sm text-sm leading-6 text-slate-500">
+                            Ask about revenue, profitability, best-selling products,
+                            stock levels, or ways to improve your business.
+                        </p>
+                    </div>
+
+                @endif
+
+            </div>
+
+            {{-- Suggested prompts --}}
+            <div class="border-t border-slate-200 px-5 pt-4">
+                <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Suggested questions
+                </p>
+
+                <div class="flex flex-wrap gap-2">
+                    <button type="button"
+                            onclick="setAIQuestion('Which products generate the most revenue?')"
+                            class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50">
+                        Best revenue products
+                    </button>
+
+                    <button type="button"
+                            onclick="setAIQuestion('How can I improve my gross profit?')"
+                            class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50">
+                        Improve profitability
+                    </button>
+
+                    <button type="button"
+                            onclick="setAIQuestion('Which products should I prioritize when restocking?')"
+                            class="rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50">
+                        Restocking advice
+                    </button>
+                </div>
+            </div>
+
+            {{-- Question form --}}
+            <div class="bg-white p-5">
+                <form method="POST"
+                      action="{{ route('admin.ai-insights.ask') }}"
+                      class="space-y-3">
+
+                    @csrf
+
+                    @if ($from)
+                        <input type="hidden" name="from" value="{{ $from }}">
+                    @endif
+
+                    @if ($to)
+                        <input type="hidden" name="to" value="{{ $to }}">
+                    @endif
+
+                    @if ($activeConversation)
+                        <input type="hidden"
+                               name="conversation_id"
+                               value="{{ $activeConversation->id }}">
+                    @endif
+
                     <label for="question"
-                           class="mb-1.5 block text-sm font-medium text-slate-700">
-                        Your question
+                           class="block text-sm font-semibold text-slate-700">
+                        Your message
                     </label>
 
                     <textarea id="question"
@@ -316,41 +489,49 @@
                               rows="3"
                               maxlength="1000"
                               required
-                              placeholder="Example: Which products should I prioritize when restocking?"
-                              class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-200">{{ old('question') }}</textarea>
-                </div>
+                              placeholder="Ask a question or follow up on an earlier answer..."
+                              class="w-full resize-y rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition focus:border-slate-400 focus:bg-white focus:ring-4 focus:ring-slate-100">{{ old('question') }}</textarea>
 
-                @if ($from)
-                    <input type="hidden" name="from" value="{{ $from }}">
-                @endif
+                    @error('question')
+                        <p class="text-sm text-red-600">{{ $message }}</p>
+                    @enderror
 
-                @if ($to)
-                    <input type="hidden" name="to" value="{{ $to }}">
-                @endif
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <p class="text-xs text-slate-400">
+                            AI responses can be inaccurate. Verify important decisions.
+                        </p>
 
-                <button type="submit"
-                        class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-700">
-                    Ask AI
-                </button>
-            </form>
+                        <button type="submit"
+                                class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200">
+                            Send message
+                            <span aria-hidden="true">↑</span>
+                        </button>
+                    </div>
 
-            @if (session('ai_answer'))
-                <div class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
-                    <h3 class="mb-3 text-sm font-semibold text-slate-900">
-                        AI response
-                    </h3>
+                </form>
+            </div>
 
-                    <div class="whitespace-pre-wrap text-sm leading-7 text-slate-700">{{ session('ai_answer') }}</div>
-                </div>
-            @endif
-        </div>
-
-        <p class="text-xs leading-5 text-slate-500">
-            Financial figures are calculated by the application. AI responses are
-            recommendations, not guaranteed business forecasts. Estimated costs
-            may use current purchase prices when historical purchase prices are missing.
-        </p>
-
+        </section>
     </div>
 </div>
+
+{{-- Chat helpers --}}
+<script>
+    function setAIQuestion(question) {
+        const textarea = document.getElementById('question');
+
+        if (textarea) {
+            textarea.value = question;
+            textarea.focus();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const messages = document.getElementById('ai-chat-messages');
+
+        if (messages) {
+            messages.scrollTop = messages.scrollHeight;
+        }
+    });
+</script>
 @endsection

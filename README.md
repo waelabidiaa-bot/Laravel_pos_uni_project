@@ -24,6 +24,9 @@ The project provides separate experiences for **Administrators** and **Cashiers*
 ### Application Settings
 ![Settings](screenshots/admin/settings.png)
 
+### AI-assistant
+![Settings](screenshots/admin/ai-chat.png)
+
 
 
 ### Cashier POS Interface
