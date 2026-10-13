@@ -1,322 +1,494 @@
-# 🧾 Laravel POS System
+# Laravel POS System
 
-A modern **Point of Sale (POS) system** built with **Laravel**, designed to manage products, categories, stock, cash sessions, sales, receipts, users, and store settings.
+A modern Point of Sale (POS) system built with Laravel to manage products, categories, inventory, sales, payments, receipts, cash sessions, users, and store settings.
 
-The project provides separate experiences for **Administrators** and **Cashiers**, with role-based access to the system.
+The application provides separate interfaces for administrators and cashiers, with role-based access control. It also includes an AI-powered business assistant that analyzes POS statistics and answers questions using local AI through Ollama.
 
----
+## Screenshots
 
-## 📸 Screenshots
+### Administrator Dashboard
 
-
-### Admin Dashboard
 ![Admin Dashboard](screenshots/admin/dashboard.png)
 
 ### Product Management
+
 ![Product Management](screenshots/admin/products.png)
 
+### Product Details
+
+![Product Details](screenshots/admin/products-details.png)
+
 ### Category Management
+
 ![Category Management](screenshots/admin/categories.png)
 
-### Statistics & Financial Analysis
-![Statistics](screenshots/admin/statistics.png)
+### Statistics and Financial Analysis
 
-### Application Settings
-![Settings](screenshots/admin/settings.png)
+![Statistics Dashboard](screenshots/admin/statistics.png)
 
-### AI-assistant
-![Settings](screenshots/admin/ai-chat.png)
+### Store Settings
 
+![Store Settings](screenshots/admin/settings.png)
 
+### AI Business Assistant
 
-### Cashier POS Interface
+![AI Business Assistant](screenshots/admin/ai-chat.png)
+
+### Cashier Point of Sale
+
 ![Cashier POS](screenshots/cashier/pos.png)
 
-### Cashier POS sale-detailes
-![Cashier POS](screenshots/cashier/sales-details.png)
+### Sale Details
 
+![Sale Details](screenshots/cashier/sales-details.png)
 
-## ✨ Features
+## Features
 
-### 🔐 Authentication & Roles
+### Authentication and Access Control
 
-* User authentication
-* Role-based access control
-* Administrator and Cashier roles
-* Protected routes and actions
+- User authentication.
+- Role-based access control.
+- Separate administrator and cashier roles.
+- Protected routes and actions.
+- Role-specific dashboards and permissions.
 
-### 📦 Product Management
+### Product Management
 
-* Create, edit and delete products
-* Product categories
-* Product pricing
-* Stock management
-* Product information management
+- Create, edit, and delete products.
+- Organize products by category.
+- Manage product prices and information.
+- Associate products with inventory records.
+- Access product details.
 
-### 🏷️ Category Management
+### Category Management
 
-* Create and manage categories
-* Assign products to categories
-* Category information and organization
+- Create and manage categories.
+- Organize products into categories.
+- Update category information.
 
-### 📊 Stock Management
+### Inventory Management
 
-* Monitor product stock
-* Track inventory levels
-* Manage available quantities
+- Monitor available stock quantities.
+- Track inventory levels.
+- Identify products with low stock.
+- Manage product stock information.
 
-### 💰 Point of Sale
+### Point of Sale
 
-* Create sales
-* Add products to a sale
-* Calculate totals
-* Process payments
-* Calculate change
-* Generate receipts
+- Create sales and add products to transactions.
+- Calculate sale totals.
+- Process payments.
+- Calculate change.
+- Associate sales with cash sessions.
+- Access sale details.
 
-### 🧾 Receipts
+### Receipts
 
-* Printable receipts
-* Store information
-* Cashier information
-* Sale details
-* Payment information
-* Currency support
+- Generate printable receipts.
+- Display store information.
+- Display cashier information.
+- Show purchased products and quantities.
+- Include sale totals and payment information.
+- Support the store's configured currency.
 
-### 💵 Cash Sessions
+### Cash Session Management
 
-* Cashier sessions
-* Session management
-* Track cashier activity
-* Connect sales with cash sessions
+- Manage cashier cash sessions.
+- Record session opening and closing information.
+- Associate sales with cash sessions.
+- Track cashier activity.
 
-### 📈 Statistics Dashboard
+### Statistics and Financial Analysis
 
-The administrator can view key sales metrics:
+Administrators can access sales and financial statistics, including:
 
-* Total revenue
-* Total sales
-* Products sold
-* Average sale value
-* Sales performance overview
+- Total revenue.
+- Total sales.
+- Products sold.
+- Average sale value.
+- Estimated costs and gross profit.
+- Gross profit margin.
+- Best-selling products.
+- Low-stock products.
+- Sales performance over a selected date range.
 
-### ⚙️ Store Settings
+Financial calculations depend on the available transaction and purchase-price data. Estimated profit should not be interpreted as net profit because operating expenses and other business costs may not be included.
+
+### AI Business Assistant
+
+The application integrates a local AI assistant powered by Ollama.
+
+Features include:
+
+- Ask questions about sales and business performance.
+- Analyze revenue, estimated costs, and gross profit.
+- Identify best-selling products.
+- Receive recommendations about inventory and restocking.
+- Generate explanations of available POS statistics.
+- Maintain persistent conversations using the database.
+- Ask follow-up questions using recent conversation history.
+- Start new conversations without losing previous ones.
+- Use a locally running AI model without requiring an external AI API.
+
+The AI assistant uses available POS data to provide business insights. Its recommendations should be reviewed before making important financial or inventory decisions.
+
+### Store Settings
 
 Administrators can configure:
 
-* Store name
-* Address
-* Phone number
-* Email
-* Currency
+- Store name.
+- Store address.
+- Phone number.
+- Email address.
+- Currency.
 
-### 🎨 Appearance
+### Appearance
 
-* Light theme
-* Dark theme
-* Theme preference saved per user
-* Responsive interface
+- Light theme.
+- Dark theme.
+- Saved theme preferences per user.
+- Responsive interface.
 
----
+## Technologies
 
-## 🛠️ Technologies
+| Technology | Purpose |
+|---|---|
+| PHP | Backend programming language |
+| Laravel | Backend framework |
+| MySQL | Relational database |
+| Eloquent ORM | Database operations and relationships |
+| Blade | Server-side templating |
+| Tailwind CSS | Interface styling |
+| JavaScript | Interactive frontend functionality |
+| Ollama | Local AI model runtime |
+| Qwen 2.5 3B | AI model used for business assistance |
+| Git | Version control |
 
-| Technology       | Purpose             |
-| ---------------- | ------------------- |
-| **Laravel**      | Backend framework   |
-| **PHP**          | Backend programming |
-| **MySQL**        | Database            |
-| **Blade**        | Templating          |
-| **Tailwind CSS** | UI styling          |
-| **Font Awesome** | Icons               |
-| **JavaScript**   | Interactive UI      |
+## Architecture
 
----
-
-## 🏗️ Architecture
-
-The application follows the Laravel MVC architecture:
+The application follows the Model-View-Controller (MVC) architecture provided by Laravel.
 
 ```text
 Laravel POS
-│
-├── Models
-│   ├── User
-│   ├── Product
-│   ├── Category
-│   ├── Sale
-│   ├── SaleItem
-│   ├── Payment
-│   ├── CashSession
-│   └── Parametre
-│
-├── Controllers
-│   ├── Authentication
-│   ├── Admin
-│   ├── Cashier
-│   └── Settings
-│
-├── Views
-│   ├── Admin
-│   ├── Cashier
-│   ├── Products
-│   ├── Categories
-│   ├── Sales
-│   ├── Statistics
-│   └── Settings
-│
-└── Database
-    ├── Migrations
-    └── Seeders
+|
+|-- app/
+|   |-- Models/
+|   |   |-- User
+|   |   |-- Product
+|   |   |-- Category
+|   |   |-- Stock
+|   |   |-- Sale
+|   |   |-- SaleItem
+|   |   |-- Payment
+|   |   |-- CashSession
+|   |   |-- Parametre
+|   |   |-- AiConversation
+|   |   |-- AiMessage
+|   |
+|   |-- Http/
+|       |-- Controllers/
+|       |   |-- Admin/
+|       |   |-- Cashier/
+|       |   |-- Authentication
+|       |
+|       |-- Middleware/
+|
+|-- resources/
+|   |-- views/
+|       |-- admin/
+|       |-- cashier/
+|       |-- products/
+|       |-- categories/
+|       |-- sales/
+|       |-- statistics/
+|       |-- settings/
+|
+|-- database/
+|   |-- migrations/
+|   |-- seeders/
+|
+|-- routes/
+|   |-- web.php
+|
+|-- public/
+|
+|-- screenshots/
 ```
 
----
+The exact organization of views and controllers may vary depending on the implementation.
 
-## 👥 User Roles
+### AI Conversation Architecture
 
-### 👨‍💼 Administrator
+The AI assistant uses two database models to maintain conversation history.
 
-Administrators have access to the management side of the POS.
+- `AiConversation`: Stores conversations associated with users.
+- `AiMessage`: Stores individual user messages and AI responses.
 
-They can:
+Each conversation can contain multiple messages. Conversations are associated with their owners so that users cannot access another user's conversations through the conversation routes.
 
-* Manage products
-* Manage categories
-* Manage stock
-* Manage cashiers
-* View sales
-* View statistics
-* Configure store settings
-* Manage their appearance preferences
+When a question is submitted, the application gathers relevant POS statistics and sends the question, recent conversation history, and business data to the local Ollama API.
 
-### 🧑‍💻 Cashier
+## User Roles
 
-Cashiers have access to the sales side of the system.
+### Administrator
+
+Administrators have access to the management side of the application.
 
 They can:
 
-* Start/manage their cash session
-* Create sales
-* Process payments
-* Print receipts
-* View their session information
-* Change their appearance preferences
+- Manage products and categories.
+- Manage stock information.
+- Manage cashiers.
+- View sales and transaction details.
+- Access statistics and financial analysis.
+- Configure store settings.
+- Manage their appearance preferences.
+- Use the AI business assistant.
+- Access their saved AI conversations.
 
----
+### Cashier
 
-## 🚀 Installation
+Cashiers have access to the sales interface.
 
-### 1. Clone the repository
+They can:
+
+- Manage their cash sessions.
+- Create sales.
+- Add products to transactions.
+- Process payments.
+- Print receipts.
+- View sale and session information.
+- Change their appearance preferences.
+
+Access to administrative functions is restricted according to the application's role-based access rules.
+
+## Installation
+
+### Requirements
+
+Before installing the application, ensure that the following software is available:
+
+- PHP version compatible with the project's `composer.json`.
+- Composer.
+- MySQL.
+- Node.js and npm.
+- Git.
+- Ollama, if you want to use the AI assistant.
+
+Required PHP extensions depend on the Laravel and Composer dependencies installed by the project.
+
+### 1. Clone the Repository
+
+Replace the repository URL with the actual URL of your GitHub repository.
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+
 cd YOUR_REPOSITORY
 ```
 
-### 2. Install PHP dependencies
+### 2. Install PHP Dependencies
 
 ```bash
 composer install
 ```
 
-### 3. Install frontend dependencies
+### 3. Install Frontend Dependencies
 
 ```bash
 npm install
 ```
 
-### 4. Create the environment file
+Build the frontend assets:
+
+```bash
+npm run build
+```
+
+### 4. Configure the Environment
+
+Create the environment configuration file:
 
 ```bash
 cp .env.example .env
 ```
 
-### 5. Generate the application key
+Generate the Laravel application key:
 
 ```bash
 php artisan key:generate
 ```
 
-### 6. Configure the database
+### 5. Configure the Database
 
-Edit your `.env` file:
+Create a MySQL database for the application.
+
+For example:
+
+```sql
+CREATE DATABASE pos_laravel_project;
+```
+
+Update the database configuration in your `.env` file:
 
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=pos_laravel_project
-DB_USERNAME=root
-DB_PASSWORD=
+DB_USERNAME=your_database_username
+DB_PASSWORD=your_database_password
 ```
 
-Use your own database credentials.
+Use the credentials and database connection settings appropriate for your environment.
 
-### 7. Run migrations
+### 6. Run Database Migrations
+
+Run the migrations to create the application's database tables:
 
 ```bash
 php artisan migrate
 ```
 
-If the project contains seeders:
+The migrations include the tables required for the AI conversation history.
+
+If the project contains seeders and you want to populate the database with the configured sample data, run:
 
 ```bash
 php artisan db:seed
 ```
 
-### 8. Start the development server
+Review the seeders before running them against a database containing existing data.
+
+### 7. Configure Ollama
+
+Install Ollama by following the official instructions:
+
+https://ollama.com/download
+
+Download the model used by the application:
+
+```bash
+ollama pull qwen2.5:3b
+```
+
+Verify that the model is installed:
+
+```bash
+ollama list
+```
+
+Start the Ollama service if it is not already running. On Linux installations using the system service, you can use:
+
+```bash
+sudo systemctl start ollama
+```
+
+Check whether the local API is responding:
+
+```bash
+curl http://127.0.0.1:11434/api/tags
+```
+
+The API should return information about the installed models.
+
+Ensure that the Ollama URL and model name used by the Laravel application match your local configuration.
+
+For the default local setup, the values are:
+
+```text
+Ollama URL: http://127.0.0.1:11434
+Model: qwen2.5:3b
+```
+
+The AI assistant requires Ollama to be running when a request is made. AI response quality and language support depend on the selected model.
+
+### 8. Start the Application
+
+Start the Laravel development server:
 
 ```bash
 php artisan serve
 ```
 
-The application will be available at:
+Open the application at:
 
-```text
 http://127.0.0.1:8000
+
+You can also use your preferred local development environment, such as Lerd, if it is configured for the project.
+
+### 9. Clear Laravel Caches if Necessary
+
+If configuration or view changes are not reflected in the application, run:
+
+```bash
+php artisan optimize:clear
 ```
 
----
+## Security
 
-## 🎨 Frontend
+The application uses Laravel features and application-level controls to help protect access to its resources.
 
-The interface uses **Tailwind CSS** to create a clean and responsive POS dashboard.
+These include:
 
-The UI focuses on:
+- Authentication.
+- Role-based authorization.
+- Middleware-protected routes.
+- CSRF protection for web forms.
+- Server-side request validation.
+- User-scoped AI conversation access.
 
-* Clear navigation
-* Responsive layouts
-* Dashboard cards
-* Consistent spacing
-* Accessible controls
-* Light and dark themes
-* Simple POS workflows
+For production deployments, configure secure environment variables, use HTTPS, protect database credentials, and review all authorization rules.
 
----
+Do not commit the `.env` file, application keys, passwords, or other secrets to the repository.
 
-## 📊 Dashboard
+## Development
 
-The administrator dashboard provides access to the main management areas:
+Useful commands for local development include:
 
-```text
-Dashboard
-│
-├── Products
-├── Categories
-├── Stock
-├── Cashiers
-├── Sales
-├── Statistics
-└── Settings
+Clear cached configuration, routes, and views:
+
+```bash
+php artisan optimize:clear
 ```
 
----
+List registered routes:
 
-## 🔒 Security
+```bash
+php artisan route:list
+```
 
-The application uses Laravel's built-in security features, including:
+Run database migrations:
 
-* Authentication
-* CSRF
+```bash
+php artisan migrate
+```
 
+Build frontend assets:
+
+```bash
+npm run build
+```
+
+Check the working tree:
+
+```bash
+git status
+```
+
+## Project Goals
+
+This project brings together inventory management, sales processing, financial reporting, and locally hosted AI assistance in one application.
+
+The goal is to provide a practical POS system with an administrator interface, a cashier workflow, and AI-assisted analysis of business data.
+
+## License
+
+Choose and add a license appropriate for your project before distributing or reusing the code.
+
+If no license has been added, all rights remain reserved by the copyright holder by default.
+
+## Author
+
+Developed as a Laravel-based Point of Sale project.
 
