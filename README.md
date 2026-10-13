@@ -482,13 +482,4 @@ This project brings together inventory management, sales processing, financial r
 
 The goal is to provide a practical POS system with an administrator interface, a cashier workflow, and AI-assisted analysis of business data.
 
-## License
-
-Choose and add a license appropriate for your project before distributing or reusing the code.
-
-If no license has been added, all rights remain reserved by the copyright holder by default.
-
-## Author
-
-Developed as a Laravel-based Point of Sale project.
 
